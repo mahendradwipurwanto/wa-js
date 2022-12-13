@@ -142,6 +142,8 @@ client.on('message', async msg => {
             console.log(error);
             msg.reply('🤖 Error: ' + error);
         }
+    }else if(msg.body.startsWith('!humanis')){
+        msg.reply('lnk humanis landa://hum.app/kt/5?id=517');
     }
 });
 
