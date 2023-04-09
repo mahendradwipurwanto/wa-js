@@ -1,57 +1,60 @@
 import express from "express"
-import db from "../services/mongodb.mjs"
 import {
-    ObjectId
-} from "mongodb"
-import generateApiKey from "../systems/apiKeys.mjs"
+    res
+} from "../systems/responseHandler.mjs";
+import {
+    io
+} from "../server.mjs";
+import createSession from "../services/wajs.mjs";
 
 const router = express.Router()
 
-// Generate api key
-router.post("/generate-api-key", async (req, res) => {
-    try {
+// Get a list of 50 posts
+router.get("/create-session", async (request, response) => {
 
-        const apiKey = generateApiKey()
+    let results = createSession();
+    io.emit('order-added', results)
 
-        let collection = await db.collection("api_keys")
-
-        // Set the date for 7 days ago
-        const sevenDaysAgo = new Date()
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-        // Query
-        const query = {
-            date: {
-                $lt: sevenDaysAgo
-            },
-            used: 0,
-            key: {
-                $ne: apiKey
-            }
-        }
-
-        let deleted = await collection.deleteMany(query)
-
-        const payload = {
-            key: apiKey,
-            used: 0,
-            date: new Date()
-        }
-        let result = await collection.insertOne(payload)
-
-        if (result) {
-            res.json(payload).status(200)
-        } else {
-            res.send("There is something wrong").status(422)
-        }
-    } catch (error) {
-        res.send(error).status(422)
-    }
+    res.success(response, results)
 })
 
+router.get('/getchats', async (req, res) => {
+
+    const client = globalThis.SESSIONS.find(sess => sess.key == globalThis.api_key)?.client;
+    console.log(client);
+    client.getChats().then((chats) => {
+        res.send({ status: "success", message: chats});
+    }).catch(() => {
+        res.send({ status: "error",message: "getchatserror" })
+    })
+});
+
+router.post('/sendmessage/:phone', async (req, res) => {
+    let phone = req.params.phone;
+    let message = req.body.message;
+
+    const client = globalThis.SESSIONS.find(sess => sess.key == globalThis.api_key)?.client;
+
+    if (phone == undefined || message == undefined) {
+        res.send({
+            status: "error",
+            message: "please enter valid phone and message"
+        })
+    } else {
+        client.sendMessage(phone + '@c.us', message).then((response) => {
+            if (response.id.fromMe) {
+                res.send({
+                    status: 'success',
+                    message: `Message successfully sent to ${phone}`
+                })
+            }
+        });
+    }
+});
+
 // 404
-router.use('*', function (req, res) {
-    res.send('what???', 404)
+router.use('*', function (request, response) {
+    res.notfound(response, 'what???')
 })
 
 export default router

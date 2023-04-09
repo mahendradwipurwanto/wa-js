@@ -4,6 +4,8 @@ import authToken from "../middleware/authToken.mjs";
 
 import authRoute from "./auth.mjs";
 import usersRoute from "./users.mjs";
+import whatsappRoute from "./whatsapp.mjs"
+import chatsRoute from "./chats.mjs"
 
 const router = express.Router();
 
@@ -11,6 +13,8 @@ const router = express.Router();
 router.use("/auth", authRoute);
 
 router.use("/users", authToken, usersRoute);
+router.use("/whatsapp", authToken, whatsappRoute);
+router.use("/chats", authToken, chatsRoute);
 
 // Example route that uses responseHandler
 router.get("/", (req, res) => {

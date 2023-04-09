@@ -11,7 +11,7 @@ import {
 const router = express.Router()
 
 // Get a list of 50 posts
-router.get("/", async (request, response) => {
+router.get("/get-all", async (request, response) => {
     let collection = await db.collection("users")
     let results = await collection.find({})
         .limit(50)
@@ -44,7 +44,7 @@ router.get("/latest", async (request, response) => {
 })
 
 // Get a single post
-router.get("/:id", async (request, response) => {
+router.get("/get-all/:id", async (request, response) => {
     let collection = await db.collection("users")
     let query = {
         _id: ObjectId(request.params.id)
@@ -56,7 +56,7 @@ router.get("/:id", async (request, response) => {
 })
 
 // Add a new document to the collection
-router.post("/", async (request, response) => {
+router.post("/create", async (request, response) => {
     let collection = await db.collection("users")
     let newDocument = request.body
     newDocument.date = new Date()
@@ -82,7 +82,7 @@ router.patch("/comment/:id", async (request, response) => {
 })
 
 // Delete an entry
-router.delete("/:id", async (request, response) => {
+router.delete("/delete/:id", async (request, response) => {
     const query = {
         _id: ObjectId(request.params.id)
     }
@@ -91,6 +91,13 @@ router.delete("/:id", async (request, response) => {
     let result = await collection.deleteOne(query)
 
     res.success(response, result)
+})
+
+// Delete an entry
+router.get("/api-key", async (request, response) => {
+    res.success(response, {
+        api_key: globalThis.api_key
+    })
 })
 
 // 404

@@ -24,6 +24,8 @@ async function authenticateToken(req, res, next) {
         }
     }
 
+    globalThis.api_key = providedKey
+
     let result = await collection.findOne(query)
 
     if (result) {

@@ -2,7 +2,7 @@
   "name": "whatsapp-js",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.Mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/mahendradwipurwanto/whatsapp-services#readme",
   "dependencies": {
+    "bson": "^5.1.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
@@ -25,6 +26,9 @@
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "mongodb": "^5.1.0",
+    "qrcode": "^1.5.1",
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.6.1",
     "uuid": "^9.0.0",
     "whatsapp-web.js": "^1.19.5"
   },
