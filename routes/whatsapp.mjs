@@ -2,26 +2,12 @@ import express from "express"
 import {
     res
 } from "../systems/responseHandler.mjs";
-import {
-    io
-} from "../server.mjs";
-import createSession from "../services/wajs.mjs";
 
 const router = express.Router()
-
-// Get a list of 50 posts
-router.get("/create-session", async (request, response) => {
-
-    let results = createSession();
-    io.emit('order-added', results)
-
-    res.success(response, results)
-})
 
 router.get('/getchats', async (req, res) => {
 
     const client = globalThis.SESSIONS.find(sess => sess.key == globalThis.api_key)?.client;
-    console.log(client);
     client.getChats().then((chats) => {
         res.send({ status: "success", message: chats});
     }).catch(() => {
@@ -34,7 +20,7 @@ router.post('/sendmessage/:phone', async (req, res) => {
     let message = req.body.message;
 
     const client = globalThis.SESSIONS.find(sess => sess.key == globalThis.api_key)?.client;
-
+    console.log(globalThis);
     if (phone == undefined || message == undefined) {
         res.send({
             status: "error",

@@ -82,5 +82,13 @@ export const res = {
             message,
             data: null
         });
+    },
+
+    duplicate: function (response, message, data = null, statusCode = 409) {
+        response.status(statusCode).json({
+            status: statusCode,
+            message,
+            data: data
+        });
     }
 };

@@ -16,7 +16,6 @@ try {
 } catch (e) {
     console.error(e)
 }
-
 let db = conn.db(dbName)
 
 export default db

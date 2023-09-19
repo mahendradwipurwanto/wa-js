@@ -4,6 +4,7 @@ import authToken from "../middleware/authToken.mjs";
 
 import authRoute from "./auth.mjs";
 import usersRoute from "./users.mjs";
+import apiKeyRoute from "./apiKeys.mjs";
 import whatsappRoute from "./whatsapp.mjs"
 import chatsRoute from "./chats.mjs"
 
@@ -12,7 +13,8 @@ const router = express.Router();
 // Load the /auth routes
 router.use("/auth", authRoute);
 
-router.use("/users", authToken, usersRoute);
+router.use("/users", usersRoute);
+router.use("/api-key", apiKeyRoute);
 router.use("/whatsapp", authToken, whatsappRoute);
 router.use("/chats", authToken, chatsRoute);
 

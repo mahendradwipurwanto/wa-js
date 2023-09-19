@@ -7,7 +7,12 @@ globalThis.ACTIVE_SESSIONS = {}
 
 const session = {}
 
-export async function createSession() {
+export async function createSession(api_key = null) {
+
+    if(api_key != null) {
+        globalThis.api_key = api_key
+    }
+
     let collection = await db.collection("devices")
     console.log(`Creating session for : ${globalThis.api_key}`);
     const client = new whatsapp.Client({

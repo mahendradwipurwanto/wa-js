@@ -27,13 +27,13 @@ router.post("/", async (request, response) => {
 
     try {
 
-        const collection = db.collection("users")
-        const cek = await collection.find({
+        const collection = db.collection("devices")
+        const cek = await collection.findOne({
             sub: sub
-        }).toArray()
+        })
 
-        if (cek && cek?.length > 0) {
-            return res.success(response, cek, "Success")
+        if (cek) {
+            return res.duplicate(response, "Already exist")
         }
 
         const result = await collection.insertOne({
@@ -41,16 +41,16 @@ router.post("/", async (request, response) => {
             credential: credential
         })
 
-        res.created(response, result, "User Created")
+        res.created(response, result, "device Created")
     } catch (error) {
-        return res.error(response, error)
+        res.error(response, error)
     }
 
 })
 
 // Get a list of 50 posts
 router.get("/", async (request, response) => {
-    const collection = db.collection("users")
+    const collection = db.collection("devices")
     const results = await collection.find({})
         .limit(50)
         .toArray()
@@ -60,7 +60,7 @@ router.get("/", async (request, response) => {
 
 // Get a single post
 router.get("/:sub", async (request, response) => {
-    const collection = db.collection("users")
+    const collection = db.collection("devices")
     const query = {
         sub: request.params.sub
     }
@@ -81,7 +81,7 @@ router.patch("/comment/:id", async (request, response) => {
         }
     }
 
-    const collection = db.collection("users")
+    const collection = db.collection("devices")
     const result = await collection.updateOne(query, updates)
 
     res.success(response, result)
@@ -93,17 +93,10 @@ router.delete("/:id", async (request, response) => {
         _id: ObjectId(request.params.id)
     }
 
-    const collection = db.collection("users")
+    const collection = db.collection("devices")
     const result = await collection.deleteOne(query)
 
     res.success(response, result)
-})
-
-// Deconste an entry
-router.get("/api-key", async (request, response) => {
-    res.success(response, {
-        api_key: globalThis.api_key
-    })
 })
 
 // 404
